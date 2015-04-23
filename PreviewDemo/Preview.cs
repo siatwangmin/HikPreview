@@ -54,6 +54,7 @@ namespace PreviewDemo
         private Button btnStartVoice;
         private Button btnStartSpeek;
         private Button btnAudioPreview;
+        private Button btnUdp;
 		/// <summary>
 		/// 必需的设计器变量。
 		/// </summary>
@@ -148,6 +149,7 @@ namespace PreviewDemo
             this.btnStartVoice = new System.Windows.Forms.Button();
             this.btnStartSpeek = new System.Windows.Forms.Button();
             this.btnAudioPreview = new System.Windows.Forms.Button();
+            this.btnUdp = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.RealPlayWnd)).BeginInit();
             this.SuspendLayout();
             // 
@@ -216,7 +218,7 @@ namespace PreviewDemo
             this.textBoxIP.Name = "textBoxIP";
             this.textBoxIP.Size = new System.Drawing.Size(114, 21);
             this.textBoxIP.TabIndex = 2;
-            this.textBoxIP.Text = "192.168.0.64";
+            this.textBoxIP.Text = "192.168.1.64";
             // 
             // textBoxPort
             // 
@@ -450,10 +452,21 @@ namespace PreviewDemo
             this.btnAudioPreview.UseVisualStyleBackColor = true;
             this.btnAudioPreview.Click += new System.EventHandler(this.btnAudioPreview_Click);
             // 
+            // btnUdp
+            // 
+            this.btnUdp.Location = new System.Drawing.Point(322, 621);
+            this.btnUdp.Name = "btnUdp";
+            this.btnUdp.Size = new System.Drawing.Size(110, 23);
+            this.btnUdp.TabIndex = 30;
+            this.btnUdp.Text = "设为UDP协议传输";
+            this.btnUdp.UseVisualStyleBackColor = true;
+            this.btnUdp.Click += new System.EventHandler(this.btnUdp_Click);
+            // 
             // Preview
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(6, 14);
             this.ClientSize = new System.Drawing.Size(531, 657);
+            this.Controls.Add(this.btnUdp);
             this.Controls.Add(this.btnAudioPreview);
             this.Controls.Add(this.btnStartSpeek);
             this.Controls.Add(this.btnStartVoice);
@@ -581,7 +594,7 @@ namespace PreviewDemo
                 lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;//预览窗口
                 lpPreviewInfo.lChannel = Int16.Parse(textBoxChannel.Text);//预te览的设备通道
                 lpPreviewInfo.dwStreamType = 0;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
-                lpPreviewInfo.dwLinkMode = 0;//连接方式：0- TCP方式，1- UDP方式，2- 多播方式，3- RTP方式，4-RTP/RTSP，5-RSTP/HTTP 
+                lpPreviewInfo.dwLinkMode = 1;//连接方式：0- TCP方式，1- UDP方式，2- 多播方式，3- RTP方式，4-RTP/RTSP，5-RSTP/HTTP 
                 lpPreviewInfo.bBlocked = true; //0- 非阻塞取流，1- 阻塞取流
 
                 CHCNetSDK.REALDATACALLBACK RealData = new CHCNetSDK.REALDATACALLBACK(RealDataCallBack);//预览实时流回调函数
@@ -907,6 +920,96 @@ namespace PreviewDemo
 
             
         }
+
+        private void btnUdp_Click(object sender, EventArgs e)
+        {
+            
+            // CHCNetSDK.NET_DVR_CUSTOM_PROTOCAL struCustomProtocal = new CHCNetSDK.NET_DVR_CUSTOM_PROTOCAL();
+
+            #region 读视频程时间参数
+           // uint lpBytesReturned = 0;
+           // CHCNetSDK.NET_DVR_TIME time = new CHCNetSDK.NET_DVR_TIME();
+           // int size = System.Runtime.InteropServices.Marshal.SizeOf(time);
+           // IntPtr myPtr = Marshal.AllocHGlobal(size);
+           // Marshal.StructureToPtr(time, myPtr, true);
+           // if (!CHCNetSDK.NET_DVR_GetDVRConfig(m_lUserID, 118, 1, myPtr, (uint)size
+           //     , ref lpBytesReturned))
+           // {
+           //     iLastErr = CHCNetSDK.NET_DVR_GetLastError();
+           //     str = "获取IP通道参数失败, error code= " + iLastErr;
+           //     MessageBox.Show(str);
+           //     return;
+           // }
+           // time = Marshal.PtrToStructure(myPtr, typeof(CHCNetSDK.NET_DVR_TIME)) is CHCNetSDK.NET_DVR_TIME ? (CHCNetSDK.NET_DVR_TIME)Marshal.PtrToStructure(myPtr, typeof(CHCNetSDK.NET_DVR_TIME)) : new CHCNetSDK.NET_DVR_TIME();
+
+           //Marshal.PtrToStructure(myPtr, time);
+           //MessageBox.Show("day:" + time.dwDay.ToString() + "Hour" +time.dwHour);
+
+            #endregion
+
+            #region 远程配置协议
+            uint lpBytesReturned = 0;
+            CHCNetSDK.NET_DVR_CUSTOM_PROTOCAL struCustomProtocal = new CHCNetSDK.NET_DVR_CUSTOM_PROTOCAL();
+            int size = System.Runtime.InteropServices.Marshal.SizeOf(struCustomProtocal);
+            IntPtr protocalIntPtr = Marshal.AllocHGlobal(size);
+            Marshal.StructureToPtr(struCustomProtocal, protocalIntPtr , true);
+
+            if (!CHCNetSDK.NET_DVR_GetDVRConfig(m_lUserID, 6116, 1, protocalIntPtr, (uint) size
+                , ref lpBytesReturned))
+            {
+                iLastErr = CHCNetSDK.NET_DVR_GetLastError();
+                str = "获取IP通道参数失败, error code= " + iLastErr;
+                MessageBox.Show(str);
+                return;
+            }
+
+            struCustomProtocal = Marshal.PtrToStructure(protocalIntPtr, typeof (CHCNetSDK.NET_DVR_CUSTOM_PROTOCAL)) is CHCNetSDK.NET_DVR_CUSTOM_PROTOCAL ? (CHCNetSDK.NET_DVR_CUSTOM_PROTOCAL)Marshal.PtrToStructure(protocalIntPtr, typeof (CHCNetSDK.NET_DVR_CUSTOM_PROTOCAL)) : new CHCNetSDK.NET_DVR_CUSTOM_PROTOCAL();
+
+            MessageBox.Show(struCustomProtocal.sProtocalName);
+
+            #endregion
+
+            // MessageBox.Show(myPtr.ToString());
+            //int size = System.Runtime.InteropServices.Marshal.SizeOf(struCustomProtocal);
+
+            //IntPtr myPtr = Marshal.AllocHGlobal(size);
+
+            //struCustomProtocal.dwEnabled = 1;
+            //struCustomProtocal.dwEnableSubStream = 1;
+            //struCustomProtocal.sProtocalName = "hello";
+            //struCustomProtocal.byMainProType = 1;
+            //struCustomProtocal.byMainTransType = 2;
+            //struCustomProtocal.wMainPort = 554;
+            //struCustomProtocal.sMainPath = "rtsp://192.168.1.64/h264/ch1/main/av_stream";
+
+            //struCustomProtocal.bySubProType = 1;
+            //struCustomProtocal.bySubTransType = 2;
+            //struCustomProtocal.wSubPort = 554;
+            //struCustomProtocal.sSubPath = "rtsp://192.168.1.64/h264/ch1/sub/av_stream";
+
+            //Marshal.StructureToPtr(struCustomProtocal, myPtr, true);
+
+
+            //if (!CHCNetSDK.NET_DVR_GetDVRConfig(m_lUserID, 118, 1, myPtr, (uint)size
+            //    , ref lpBytesReturned))
+            //{
+            //    iLastErr = CHCNetSDK.NET_DVR_GetLastError();
+            //    str = "获取IP通道参数失败, error code= " + iLastErr;
+            //    MessageBox.Show(str);
+            //    return;
+            //}
+
+
+            //if (!CHCNetSDK.NET_DVR_SetDVRConfig(m_lUserID, 6116, 1,myPtr , (uint)size))
+            //{
+            //    iLastErr = CHCNetSDK.NET_DVR_GetLastError();
+            //    str = "获取IP通道参数失败, error code= " + iLastErr;
+            //    MessageBox.Show(str);
+            //    return;
+            //}
+
+        }
+
 
 
 
