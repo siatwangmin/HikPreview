@@ -55,6 +55,12 @@ namespace PreviewDemo
         private Button btnStartSpeek;
         private Button btnAudioPreview;
         private Button btnUdp;
+        private Panel panel1;
+        private Label label16;
+        private Label label17;
+        private Panel panel2;
+        private Panel panel3;
+        private Button btnDraw;
 		/// <summary>
 		/// 必需的设计器变量。
 		/// </summary>
@@ -150,7 +156,16 @@ namespace PreviewDemo
             this.btnStartSpeek = new System.Windows.Forms.Button();
             this.btnAudioPreview = new System.Windows.Forms.Button();
             this.btnUdp = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.btnDraw = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.RealPlayWnd)).BeginInit();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -196,7 +211,7 @@ namespace PreviewDemo
             // 
             // btnPreview
             // 
-            this.btnPreview.Location = new System.Drawing.Point(17, 571);
+            this.btnPreview.Location = new System.Drawing.Point(13, 73);
             this.btnPreview.Name = "btnPreview";
             this.btnPreview.Size = new System.Drawing.Size(76, 34);
             this.btnPreview.TabIndex = 7;
@@ -285,7 +300,7 @@ namespace PreviewDemo
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(18, 550);
+            this.label9.Location = new System.Drawing.Point(14, 52);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(29, 12);
             this.label9.TabIndex = 13;
@@ -302,7 +317,7 @@ namespace PreviewDemo
             // 
             // btnBMP
             // 
-            this.btnBMP.Location = new System.Drawing.Point(110, 572);
+            this.btnBMP.Location = new System.Drawing.Point(106, 74);
             this.btnBMP.Name = "btnBMP";
             this.btnBMP.Size = new System.Drawing.Size(79, 34);
             this.btnBMP.TabIndex = 8;
@@ -312,7 +327,7 @@ namespace PreviewDemo
             // 
             // btnJPEG
             // 
-            this.btnJPEG.Location = new System.Drawing.Point(208, 571);
+            this.btnJPEG.Location = new System.Drawing.Point(204, 73);
             this.btnJPEG.Name = "btnJPEG";
             this.btnJPEG.Size = new System.Drawing.Size(97, 34);
             this.btnJPEG.TabIndex = 9;
@@ -323,7 +338,7 @@ namespace PreviewDemo
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(113, 550);
+            this.label11.Location = new System.Drawing.Point(109, 52);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(47, 12);
             this.label11.TabIndex = 17;
@@ -332,7 +347,7 @@ namespace PreviewDemo
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(214, 550);
+            this.label12.Location = new System.Drawing.Point(210, 52);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(53, 12);
             this.label12.TabIndex = 18;
@@ -341,7 +356,7 @@ namespace PreviewDemo
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(17, 521);
+            this.label13.Location = new System.Drawing.Point(14, 19);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(83, 12);
             this.label13.TabIndex = 19;
@@ -349,7 +364,7 @@ namespace PreviewDemo
             // 
             // textBoxChannel
             // 
-            this.textBoxChannel.Location = new System.Drawing.Point(107, 517);
+            this.textBoxChannel.Location = new System.Drawing.Point(104, 15);
             this.textBoxChannel.Name = "textBoxChannel";
             this.textBoxChannel.Size = new System.Drawing.Size(100, 21);
             this.textBoxChannel.TabIndex = 6;
@@ -357,7 +372,7 @@ namespace PreviewDemo
             // 
             // btnRecord
             // 
-            this.btnRecord.Location = new System.Drawing.Point(319, 571);
+            this.btnRecord.Location = new System.Drawing.Point(14, 42);
             this.btnRecord.Name = "btnRecord";
             this.btnRecord.Size = new System.Drawing.Size(100, 34);
             this.btnRecord.TabIndex = 10;
@@ -368,7 +383,7 @@ namespace PreviewDemo
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(320, 550);
+            this.label14.Location = new System.Drawing.Point(15, 21);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(65, 12);
             this.label14.TabIndex = 22;
@@ -376,7 +391,7 @@ namespace PreviewDemo
             // 
             // btn_Exit
             // 
-            this.btn_Exit.Location = new System.Drawing.Point(438, 615);
+            this.btn_Exit.Location = new System.Drawing.Point(133, 86);
             this.btn_Exit.Name = "btn_Exit";
             this.btn_Exit.Size = new System.Drawing.Size(75, 32);
             this.btn_Exit.TabIndex = 11;
@@ -387,7 +402,7 @@ namespace PreviewDemo
             // 
             // btnPTZ
             // 
-            this.btnPTZ.Location = new System.Drawing.Point(438, 571);
+            this.btnPTZ.Location = new System.Drawing.Point(133, 42);
             this.btnPTZ.Name = "btnPTZ";
             this.btnPTZ.Size = new System.Drawing.Size(75, 34);
             this.btnPTZ.TabIndex = 23;
@@ -398,7 +413,7 @@ namespace PreviewDemo
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(449, 550);
+            this.label15.Location = new System.Drawing.Point(144, 21);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(53, 12);
             this.label15.TabIndex = 24;
@@ -406,27 +421,27 @@ namespace PreviewDemo
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(344, 516);
+            this.button1.Location = new System.Drawing.Point(204, 117);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(97, 34);
             this.button1.TabIndex = 25;
-            this.button1.Text = "button1";
+            this.button1.Text = "抓图到内存";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // mytb
             // 
-            this.mytb.Location = new System.Drawing.Point(228, 518);
+            this.mytb.Location = new System.Drawing.Point(91, 118);
             this.mytb.Name = "mytb";
-            this.mytb.Size = new System.Drawing.Size(100, 21);
+            this.mytb.Size = new System.Drawing.Size(97, 21);
             this.mytb.TabIndex = 26;
             this.mytb.Text = "0";
             // 
             // btnStartVoice
             // 
-            this.btnStartVoice.Location = new System.Drawing.Point(17, 618);
+            this.btnStartVoice.Location = new System.Drawing.Point(88, 1);
             this.btnStartVoice.Name = "btnStartVoice";
-            this.btnStartVoice.Size = new System.Drawing.Size(83, 29);
+            this.btnStartVoice.Size = new System.Drawing.Size(90, 30);
             this.btnStartVoice.TabIndex = 27;
             this.btnStartVoice.Text = "开始对讲";
             this.btnStartVoice.UseVisualStyleBackColor = true;
@@ -434,9 +449,9 @@ namespace PreviewDemo
             // 
             // btnStartSpeek
             // 
-            this.btnStartSpeek.Location = new System.Drawing.Point(107, 618);
+            this.btnStartSpeek.Location = new System.Drawing.Point(88, 37);
             this.btnStartSpeek.Name = "btnStartSpeek";
-            this.btnStartSpeek.Size = new System.Drawing.Size(89, 29);
+            this.btnStartSpeek.Size = new System.Drawing.Size(90, 30);
             this.btnStartSpeek.TabIndex = 28;
             this.btnStartSpeek.Text = "PC广播";
             this.btnStartSpeek.UseVisualStyleBackColor = true;
@@ -444,9 +459,9 @@ namespace PreviewDemo
             // 
             // btnAudioPreview
             // 
-            this.btnAudioPreview.Location = new System.Drawing.Point(208, 621);
+            this.btnAudioPreview.Location = new System.Drawing.Point(88, 80);
             this.btnAudioPreview.Name = "btnAudioPreview";
-            this.btnAudioPreview.Size = new System.Drawing.Size(105, 23);
+            this.btnAudioPreview.Size = new System.Drawing.Size(90, 30);
             this.btnAudioPreview.TabIndex = 29;
             this.btnAudioPreview.Text = "打开声音预览";
             this.btnAudioPreview.UseVisualStyleBackColor = true;
@@ -454,7 +469,7 @@ namespace PreviewDemo
             // 
             // btnUdp
             // 
-            this.btnUdp.Location = new System.Drawing.Point(322, 621);
+            this.btnUdp.Location = new System.Drawing.Point(17, 92);
             this.btnUdp.Name = "btnUdp";
             this.btnUdp.Size = new System.Drawing.Size(110, 23);
             this.btnUdp.TabIndex = 30;
@@ -462,29 +477,85 @@ namespace PreviewDemo
             this.btnUdp.UseVisualStyleBackColor = true;
             this.btnUdp.Click += new System.EventHandler(this.btnUdp_Click);
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.label16);
+            this.panel1.Controls.Add(this.btnStartVoice);
+            this.panel1.Controls.Add(this.btnStartSpeek);
+            this.panel1.Controls.Add(this.btnAudioPreview);
+            this.panel1.Location = new System.Drawing.Point(543, 327);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(193, 119);
+            this.panel1.TabIndex = 31;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(12, 19);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(53, 12);
+            this.label16.TabIndex = 30;
+            this.label16.Text = "语音对讲";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(15, 127);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(65, 12);
+            this.label17.TabIndex = 32;
+            this.label17.Text = "抓图分辨率";
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.btnJPEG);
+            this.panel2.Controls.Add(this.label17);
+            this.panel2.Controls.Add(this.btnPreview);
+            this.panel2.Controls.Add(this.label9);
+            this.panel2.Controls.Add(this.btnBMP);
+            this.panel2.Controls.Add(this.mytb);
+            this.panel2.Controls.Add(this.label11);
+            this.panel2.Controls.Add(this.button1);
+            this.panel2.Controls.Add(this.textBoxChannel);
+            this.panel2.Controls.Add(this.label12);
+            this.panel2.Controls.Add(this.label13);
+            this.panel2.Location = new System.Drawing.Point(543, 12);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(309, 165);
+            this.panel2.TabIndex = 33;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.btnPTZ);
+            this.panel3.Controls.Add(this.btnRecord);
+            this.panel3.Controls.Add(this.label14);
+            this.panel3.Controls.Add(this.btnUdp);
+            this.panel3.Controls.Add(this.btn_Exit);
+            this.panel3.Controls.Add(this.label15);
+            this.panel3.Location = new System.Drawing.Point(543, 183);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(225, 129);
+            this.panel3.TabIndex = 34;
+            // 
+            // btnDraw
+            // 
+            this.btnDraw.Location = new System.Drawing.Point(543, 453);
+            this.btnDraw.Name = "btnDraw";
+            this.btnDraw.Size = new System.Drawing.Size(90, 30);
+            this.btnDraw.TabIndex = 35;
+            this.btnDraw.Text = "叠加字符";
+            this.btnDraw.UseVisualStyleBackColor = true;
+            this.btnDraw.Click += new System.EventHandler(this.btnDraw_Click);
+            // 
             // Preview
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(6, 14);
-            this.ClientSize = new System.Drawing.Size(531, 657);
-            this.Controls.Add(this.btnUdp);
-            this.Controls.Add(this.btnAudioPreview);
-            this.Controls.Add(this.btnStartSpeek);
-            this.Controls.Add(this.btnStartVoice);
-            this.Controls.Add(this.mytb);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.label15);
-            this.Controls.Add(this.btnPTZ);
-            this.Controls.Add(this.btn_Exit);
-            this.Controls.Add(this.label14);
-            this.Controls.Add(this.btnRecord);
-            this.Controls.Add(this.textBoxChannel);
-            this.Controls.Add(this.label13);
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.btnJPEG);
-            this.Controls.Add(this.btnBMP);
+            this.ClientSize = new System.Drawing.Size(882, 538);
+            this.Controls.Add(this.btnDraw);
+            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
@@ -494,7 +565,6 @@ namespace PreviewDemo
             this.Controls.Add(this.textBoxPort);
             this.Controls.Add(this.textBoxIP);
             this.Controls.Add(this.RealPlayWnd);
-            this.Controls.Add(this.btnPreview);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label2);
@@ -504,6 +574,12 @@ namespace PreviewDemo
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Preview";
             ((System.ComponentModel.ISupportInitialize)(this.RealPlayWnd)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1009,6 +1085,41 @@ namespace PreviewDemo
             //}
 
         }
+
+        //private CHCNetSDK.DRAWFUN fDrawFun = delegate(int handle, IntPtr dc, uint user)
+        //{
+        //    Graphics g = Graphics.FromHdc(dc);
+        //    Pen m_pen = new Pen(Color.Blue, 1);
+        //    //设置虚线格式 
+        //    m_pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+        //    g.DrawRectangle(m_pen, 0, 0, 100, 100);
+        //};
+
+        private CHCNetSDK.DRAWFUN fDrawFun;
+
+        private void btnDraw_Click(object sender, EventArgs e)
+        {
+            fDrawFun = new CHCNetSDK.DRAWFUN(DrawFunCallBack);
+
+            if (! CHCNetSDK.NET_DVR_RigisterDrawFun(m_lRealHandle,fDrawFun,1))
+            {
+                iLastErr = CHCNetSDK.NET_DVR_GetLastError();
+                str = "叠加字符失败, error code= " + iLastErr;
+                MessageBox.Show(str);
+                return;
+            }
+           // CHCNetSDK.NET_DVR_RigisterPlayBackDrawFun()
+        }
+
+        private void DrawFunCallBack(int lRealHandle, IntPtr hDc, uint dwUser)
+        {
+            
+            Graphics g = Graphics.FromHdc(hDc);
+            Pen m_pen = new Pen(Color.Blue, 1);
+            //设置虚线格式 
+            m_pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+            g.DrawRectangle(m_pen, 0, 0, 100, 100);
+	    }
 
 
 
