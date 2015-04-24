@@ -1111,14 +1111,19 @@ namespace PreviewDemo
            // CHCNetSDK.NET_DVR_RigisterPlayBackDrawFun()
         }
 
+	    private static int count = 0;
         private void DrawFunCallBack(int lRealHandle, IntPtr hDc, uint dwUser)
         {
             
             Graphics g = Graphics.FromHdc(hDc);
-            Pen m_pen = new Pen(Color.Blue, 1);
+            Pen m_pen = new Pen(Color.Red, 2);
             //设置虚线格式 
-            m_pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-            g.DrawRectangle(m_pen, 0, 0, 100, 100);
+            //m_pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+            
+
+
+            g.DrawRectangle(m_pen, 0, 0, 100 * (count++),100*(count++));
+          //  g.Clear(Color.Transparent);
 	    }
 
 
