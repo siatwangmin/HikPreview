@@ -890,6 +890,7 @@ namespace PreviewDemo
 
             byte[] buffer = new byte[102400];
             uint lpSizeReturned = new uint();
+
             //JPEGץͼ Capture a JPEG picture
             if (!CHCNetSDK.NET_DVR_CaptureJPEGPicture_NEW(m_lUserID, lChannel, ref lpJpegPara, buffer, 102400, ref lpSizeReturned))
             {
