@@ -167,6 +167,11 @@
     <Content Include="ThirdParty\SystemTransform.dll" />
     <Content Include="ThirdParty\ZedGraph.dll" />
     <Content Include="ThirdParty\ZedGraph.license.txt" />
+    <Content Include="x86\cudart32_55.dll" />
+    <Content Include="x86\OpenCL.dll" />
+    <Content Include="x86\opencv_core290.dll" />
+    <Content Include="x86\opencv_highgui290.dll" />
+    <Content Include="x86\opencv_imgproc290.dll" />
     <EmbeddedResource Include="Preview.resx">
       <DependentUpon>Preview.cs</DependentUpon>
     </EmbeddedResource>

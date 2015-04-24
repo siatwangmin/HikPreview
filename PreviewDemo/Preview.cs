@@ -81,7 +81,7 @@ namespace PreviewDemo
 			//
 			InitializeComponent();
 
-		    MessageBox.Show(System.Environment.CurrentDirectory);
+		    //MessageBox.Show(System.Environment.CurrentDirectory);
 
 			m_bInitSDK = CHCNetSDK.NET_DVR_Init();
 			if (m_bInitSDK == false)
