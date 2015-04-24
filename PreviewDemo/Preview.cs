@@ -1176,7 +1176,7 @@ namespace PreviewDemo
             //    pictureBoxTest.Image = _frame.ToBitmap();
             //}
 
-            _frame = new Image<Bgr, byte>(@"..\..\..\Picture\Lena.png");
+            _frame = new Image<Bgr, byte>(@"D:\Lena.png");
             pictureBoxTest.Image = _frame.ToBitmap();
         }
 
