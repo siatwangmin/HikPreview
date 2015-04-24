@@ -8,6 +8,12 @@ using System.Text;
 
 using System.Runtime.InteropServices;
 
+
+using Emgu.CV;
+using Emgu.CV.UI;
+using Emgu.CV.Util;
+using Emgu.CV.Structure;
+
 namespace PreviewDemo
 {
 	/// <summary>
@@ -61,6 +67,8 @@ namespace PreviewDemo
         private Panel panel2;
         private Panel panel3;
         private Button btnDraw;
+        private Button btnCapture;
+        private PictureBox pictureBoxTest;
 		/// <summary>
 		/// 必需的设计器变量。
 		/// </summary>
@@ -72,6 +80,9 @@ namespace PreviewDemo
 			// Windows 窗体设计器支持所必需的
 			//
 			InitializeComponent();
+
+		    MessageBox.Show(System.Environment.CurrentDirectory);
+
 			m_bInitSDK = CHCNetSDK.NET_DVR_Init();
 			if (m_bInitSDK == false)
 			{
@@ -162,10 +173,13 @@ namespace PreviewDemo
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnDraw = new System.Windows.Forms.Button();
+            this.btnCapture = new System.Windows.Forms.Button();
+            this.pictureBoxTest = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.RealPlayWnd)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTest)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -539,7 +553,7 @@ namespace PreviewDemo
             // 
             // btnDraw
             // 
-            this.btnDraw.Location = new System.Drawing.Point(543, 453);
+            this.btnDraw.Location = new System.Drawing.Point(543, 452);
             this.btnDraw.Name = "btnDraw";
             this.btnDraw.Size = new System.Drawing.Size(90, 30);
             this.btnDraw.TabIndex = 35;
@@ -547,10 +561,30 @@ namespace PreviewDemo
             this.btnDraw.UseVisualStyleBackColor = true;
             this.btnDraw.Click += new System.EventHandler(this.btnDraw_Click);
             // 
+            // btnCapture
+            // 
+            this.btnCapture.Location = new System.Drawing.Point(543, 503);
+            this.btnCapture.Name = "btnCapture";
+            this.btnCapture.Size = new System.Drawing.Size(97, 23);
+            this.btnCapture.TabIndex = 36;
+            this.btnCapture.Text = "打开本地摄像头";
+            this.btnCapture.UseVisualStyleBackColor = true;
+            this.btnCapture.Click += new System.EventHandler(this.btnCapture_Click);
+            // 
+            // pictureBoxTest
+            // 
+            this.pictureBoxTest.Location = new System.Drawing.Point(90, 516);
+            this.pictureBoxTest.Name = "pictureBoxTest";
+            this.pictureBoxTest.Size = new System.Drawing.Size(100, 50);
+            this.pictureBoxTest.TabIndex = 37;
+            this.pictureBoxTest.TabStop = false;
+            // 
             // Preview
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(6, 14);
-            this.ClientSize = new System.Drawing.Size(882, 538);
+            this.ClientSize = new System.Drawing.Size(882, 600);
+            this.Controls.Add(this.pictureBoxTest);
+            this.Controls.Add(this.btnCapture);
             this.Controls.Add(this.btnDraw);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
@@ -580,6 +614,7 @@ namespace PreviewDemo
             this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTest)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1128,6 +1163,22 @@ namespace PreviewDemo
 
 
 
+	    private Capture _capture;
+	    private Image<Bgr, byte> _frame; 
+
+        private void btnCapture_Click(object sender, EventArgs e)
+        {
+            //_capture = new Capture(0);
+
+            //if (_capture != null)
+            //{
+            //    _frame = _capture.QueryFrame();
+            //    pictureBoxTest.Image = _frame.ToBitmap();
+            //}
+
+            _frame = new Image<Bgr, byte>(@"..\..\..\Picture\Lena.png");
+            pictureBoxTest.Image = _frame.ToBitmap();
+        }
 
 
 	}

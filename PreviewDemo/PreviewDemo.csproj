@@ -136,6 +136,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CHCNetSDK.cs" />
     <Compile Include="PTZControl.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -149,6 +150,8 @@
     <Compile Include="Preview.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Content Include="Picture\Lena.png" />
+    <Content Include="ThirdParty\AudioIntercom.dll" />
     <Content Include="ThirdParty\Emgu.CV.dll" />
     <Content Include="ThirdParty\Emgu.CV.ML.dll" />
     <Content Include="ThirdParty\Emgu.CV.ML.xml" />
@@ -157,6 +160,11 @@
     <Content Include="ThirdParty\Emgu.CV.xml" />
     <Content Include="ThirdParty\Emgu.Util.dll" />
     <Content Include="ThirdParty\Emgu.Util.xml" />
+    <Content Include="ThirdParty\HCNetSDK.dll" />
+    <Content Include="ThirdParty\OpenAL32.dll" />
+    <Content Include="ThirdParty\PlayCtrl.dll" />
+    <Content Include="ThirdParty\StreamTransClient.dll" />
+    <Content Include="ThirdParty\SystemTransform.dll" />
     <Content Include="ThirdParty\ZedGraph.dll" />
     <Content Include="ThirdParty\ZedGraph.license.txt" />
     <EmbeddedResource Include="Preview.resx">
