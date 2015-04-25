@@ -1,7 +1,9 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Forms;
 using System.Data;
 using System.Text;
@@ -10,6 +12,7 @@ using System.Runtime.InteropServices;
 
 
 using Emgu.CV;
+using Emgu.CV.CvEnum;
 using Emgu.CV.UI;
 using Emgu.CV.Util;
 using Emgu.CV.Structure;
@@ -68,11 +71,9 @@ namespace PreviewDemo
         private Panel panel3;
         private Button btnDraw;
         private Button btnCapture;
-        private PictureBox pictureBoxTest;
-		/// <summary>
-		/// 必需的设计器变量。
-		/// </summary>
-		private System.ComponentModel.Container components = null;
+        private Button btnPedestrianDetection;
+        private Timer timerPedestrianDetection;
+        private IContainer components;
 
 		public Preview()
 		{
@@ -133,6 +134,7 @@ namespace PreviewDemo
 		/// </summary>
 		private void InitializeComponent()
 		{
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -174,12 +176,12 @@ namespace PreviewDemo
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnDraw = new System.Windows.Forms.Button();
             this.btnCapture = new System.Windows.Forms.Button();
-            this.pictureBoxTest = new System.Windows.Forms.PictureBox();
+            this.btnPedestrianDetection = new System.Windows.Forms.Button();
+            this.timerPedestrianDetection = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.RealPlayWnd)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTest)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -571,19 +573,25 @@ namespace PreviewDemo
             this.btnCapture.UseVisualStyleBackColor = true;
             this.btnCapture.Click += new System.EventHandler(this.btnCapture_Click);
             // 
-            // pictureBoxTest
+            // btnPedestrianDetection
             // 
-            this.pictureBoxTest.Location = new System.Drawing.Point(90, 516);
-            this.pictureBoxTest.Name = "pictureBoxTest";
-            this.pictureBoxTest.Size = new System.Drawing.Size(100, 50);
-            this.pictureBoxTest.TabIndex = 37;
-            this.pictureBoxTest.TabStop = false;
+            this.btnPedestrianDetection.Location = new System.Drawing.Point(649, 503);
+            this.btnPedestrianDetection.Name = "btnPedestrianDetection";
+            this.btnPedestrianDetection.Size = new System.Drawing.Size(75, 23);
+            this.btnPedestrianDetection.TabIndex = 38;
+            this.btnPedestrianDetection.Text = "开始识别";
+            this.btnPedestrianDetection.UseVisualStyleBackColor = true;
+            this.btnPedestrianDetection.Click += new System.EventHandler(this.btnPedestrianDetection_Click);
+            // 
+            // timerPedestrianDetection
+            // 
+            this.timerPedestrianDetection.Tick += new System.EventHandler(this.timerPedestrianDetection_Tick);
             // 
             // Preview
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(6, 14);
             this.ClientSize = new System.Drawing.Size(882, 600);
-            this.Controls.Add(this.pictureBoxTest);
+            this.Controls.Add(this.btnPedestrianDetection);
             this.Controls.Add(this.btnCapture);
             this.Controls.Add(this.btnDraw);
             this.Controls.Add(this.panel3);
@@ -614,7 +622,6 @@ namespace PreviewDemo
             this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTest)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -878,11 +885,11 @@ namespace PreviewDemo
         private void button1_Click(object sender, EventArgs e)
         {
 
-            string sJpegPicFileName;
+           // string sJpegPicFileName;
             //图片保存路径和文件名 the path and file name to save
-            sJpegPicFileName = "JPEG_test.jpg";
+           // sJpegPicFileName = "JPEG_test.jpg";
 
-            int lChannel = Int16.Parse(textBoxChannel.Text); //通道号 Channel number
+           // int lChannel = Int16.Parse(textBoxChannel.Text); //通道号 Channel number
 
             CHCNetSDK.NET_DVR_JPEGPARA lpJpegPara = new CHCNetSDK.NET_DVR_JPEGPARA();
             lpJpegPara.wPicQuality = 0; //图像质量 Image quality
@@ -891,6 +898,17 @@ namespace PreviewDemo
             byte[] buffer = new byte[102400];
             uint lpSizeReturned = new uint();
             //JPEG抓图 Capture a JPEG picture
+            Image<Bgr, Byte> image = new Image<Bgr, byte>(176, 144);
+            IntPtr decodeimage = new IntPtr();
+            Stopwatch stopwatch = new Stopwatch();
+
+            HOGDescriptor hog = new HOGDescriptor();
+            hog.SetSVMDetector(HOGDescriptor.GetDefaultPeopleDetector());
+            
+
+
+            stopwatch.Start();
+
             if (!CHCNetSDK.NET_DVR_CaptureJPEGPicture_NEW(m_lUserID, lChannel, ref lpJpegPara, buffer, 102400, ref lpSizeReturned))
             {
                 iLastErr = CHCNetSDK.NET_DVR_GetLastError();
@@ -900,8 +918,33 @@ namespace PreviewDemo
             }
             else
             {
-                str = "Successful to capture the JPEG file and the saved file is " + sJpegPicFileName;
-                MessageBox.Show(str);
+              //  MemoryStream ms = new MemoryStream(buffer, 0, buffer.Length);
+              //  System.Drawing.Bitmap myImage1 = new Bitmap(ms);
+              //  Image<Bgr, Byte> image = new Image<Bgr, byte>(myImage1);
+
+
+               // CvInvoke.cvDecodeImage()
+
+                decodeimage = CvInvoke.cvDecodeImage(buffer, LOAD_IMAGE_TYPE.CV_LOAD_IMAGE_COLOR);
+                
+                CvInvoke.cvCopy(decodeimage, image, IntPtr.Zero);
+
+                var rects = hog.DetectMultiScale(image, 0, new Size(8, 8), new Size(8, 8), 1.05, 2, false);
+
+                foreach (Rectangle rectangle in rects)
+                {
+                    image.Draw(rectangle, new Bgr(Color.Red), 2);
+                }
+
+               //Image<Bgr, Byte> image = new Image<Bgr, byte>(CvInvoke.cvDecodeImage(buffer,LOAD_IMAGE_TYPE.CV_LOAD_IMAGE_COLOR));
+                stopwatch.Stop();
+                TimeSpan timeSpan = stopwatch.Elapsed;
+                // str = "Successful to capture the JPEG file and the saved file is " + sJpegPicFileName;
+                MessageBox.Show(image.Width + "  " + image.Height + "抓图成功 lpSizeReturned " + lpSizeReturned + " 耗时：" + timeSpan.TotalMilliseconds);
+
+                CvInvoke.cvShowImage("JEPG", image);
+                CvInvoke.cvWaitKey(0);
+                // Image<Bgr , byte> jpgImage = new Image<Bgr, byte>();
             }
             return;
         
@@ -1168,16 +1211,133 @@ namespace PreviewDemo
 
         private void btnCapture_Click(object sender, EventArgs e)
         {
-            //_capture = new Capture(0);
+            HOGDescriptor hog = new HOGDescriptor();
+            hog.SetSVMDetector(HOGDescriptor.GetDefaultPeopleDetector());
 
-            //if (_capture != null)
-            //{
-            //    _frame = _capture.QueryFrame();
-            //    pictureBoxTest.Image = _frame.ToBitmap();
-            //}
 
-            _frame = new Image<Bgr, byte>(@"..\..\..\Picture\Lena.png");
-            pictureBoxTest.Image = _frame.ToBitmap();
+
+            //_capture = new Capture(@"E:\pedestrian detection\src\4.mp4");
+
+            _capture = new Capture(0);
+
+            if (_capture != null)
+            {
+                while ((_frame = _capture.QueryFrame()) != null)
+                {
+                    //_frame = new Image<Bgr, byte>(@"E:\test.jpg");
+                    var rects = hog.DetectMultiScale(_frame, 0, new Size(8, 8), new Size(8, 8), 1.05, 2, false);
+
+                    foreach (Rectangle rectangle in rects)
+                    {
+                        _frame.Draw(rectangle , new Bgr(Color.Red), 2);
+                    }
+                    CvInvoke.cvShowImage("hog",_frame.Ptr);
+                    CvInvoke.cvWaitKey(1);
+                    //hog.DetectMultiScale(_frame,)
+                }
+
+
+                //pictureBoxTest.Image = _frame.ToBitmap();
+            }
+
+            //_frame = new Image<Bgr, byte>(@"..\..\..\Picture\Lena.png");
+            //pictureBoxTest.Image = _frame.ToBitmap();
+        }
+
+
+
+
+
+
+
+
+        int lChannel = 1; //通道号 Channel number
+
+        CHCNetSDK.NET_DVR_JPEGPARA lpJpegPara = new CHCNetSDK.NET_DVR_JPEGPARA();
+
+        byte[] buffer = new byte[102400];
+        uint lpSizeReturned = new uint();
+        //JPEG抓图 Capture a JPEG picture
+        Image<Bgr, Byte> image = new Image<Bgr, byte>(176, 144);
+        IntPtr decodeimage = new IntPtr();
+        Stopwatch stopwatch = new Stopwatch();
+
+        HOGDescriptor hog = new HOGDescriptor();
+        
+
+
+        private void btnPedestrianDetection_Click(object sender, EventArgs e)
+        {
+            if (btnPedestrianDetection.Text.Equals("开始识别"))
+            {
+                lpJpegPara.wPicQuality = 0; //图像质量 Image quality
+                lpJpegPara.wPicSize = 1; //抓图分辨率 设备支持0 352*288；支持1 176*144；支持2 704*576
+                hog.SetSVMDetector(HOGDescriptor.GetDefaultPeopleDetector());
+
+                timerPedestrianDetection.Start();
+                btnPedestrianDetection.Text = "停止识别";
+            }
+            else if (btnPedestrianDetection.Text.Equals("停止识别"))
+            {
+                timerPedestrianDetection.Stop();
+                btnPedestrianDetection.Text = "开始识别";
+            }
+        }
+
+
+
+        private void timerPedestrianDetection_Tick(object sender, EventArgs e)
+        {
+
+            //int lChannel = 1; //通道号 Channel number
+
+            //CHCNetSDK.NET_DVR_JPEGPARA lpJpegPara = new CHCNetSDK.NET_DVR_JPEGPARA();
+            //lpJpegPara.wPicQuality = 0; //图像质量 Image quality
+            //lpJpegPara.wPicSize = 1; //抓图分辨率 设备支持0 352*288；支持1 176*144；支持2 704*576
+
+            //byte[] buffer = new byte[102400];
+            //uint lpSizeReturned = new uint();
+            ////JPEG抓图 Capture a JPEG picture
+            //Image<Bgr, Byte> image = new Image<Bgr, byte>(176, 144);
+            //IntPtr decodeimage = new IntPtr();
+            //Stopwatch stopwatch = new Stopwatch();
+
+            //HOGDescriptor hog = new HOGDescriptor();
+            //hog.SetSVMDetector(HOGDescriptor.GetDefaultPeopleDetector());
+
+
+
+            //stopwatch.Start();
+
+            if (!CHCNetSDK.NET_DVR_CaptureJPEGPicture_NEW(m_lUserID, lChannel, ref lpJpegPara, buffer, 102400, ref lpSizeReturned))
+            {
+                iLastErr = CHCNetSDK.NET_DVR_GetLastError();
+                str = "NET_DVR_CaptureJPEGPicture failed, error code= " + iLastErr;
+                MessageBox.Show(str);
+                return;
+            }
+            else
+            {
+                decodeimage = CvInvoke.cvDecodeImage(buffer, LOAD_IMAGE_TYPE.CV_LOAD_IMAGE_COLOR);
+
+                CvInvoke.cvCopy(decodeimage, image, IntPtr.Zero);
+
+                var rects = hog.DetectMultiScale(image, 0, new Size(8, 8), new Size(8, 8), 1.05, 2, false);
+
+                foreach (Rectangle rectangle in rects)
+                {
+                    image.Draw(rectangle, new Bgr(Color.Red), 2);
+                }
+
+               // stopwatch.Stop();
+               // TimeSpan timeSpan = stopwatch.Elapsed;
+               // MessageBox.Show(image.Width + "  " + image.Height + "抓图成功 lpSizeReturned " + lpSizeReturned + " 耗时：" + timeSpan.TotalMilliseconds);
+
+                CvInvoke.cvShowImage("JEPG", image);
+                CvInvoke.cvWaitKey(1);
+                // Image<Bgr , byte> jpgImage = new Image<Bgr, byte>();
+            }
+            return;
         }
 
 
