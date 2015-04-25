@@ -73,6 +73,8 @@ namespace PreviewDemo
         private Button btnCapture;
         private Button btnPedestrianDetection;
         private Timer timerPedestrianDetection;
+        private Button btnDestributeDetection;
+        private Timer timerDistributeDetection;
         private IContainer components;
 
 		public Preview()
@@ -178,6 +180,8 @@ namespace PreviewDemo
             this.btnCapture = new System.Windows.Forms.Button();
             this.btnPedestrianDetection = new System.Windows.Forms.Button();
             this.timerPedestrianDetection = new System.Windows.Forms.Timer(this.components);
+            this.btnDestributeDetection = new System.Windows.Forms.Button();
+            this.timerDistributeDetection = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.RealPlayWnd)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -239,7 +243,7 @@ namespace PreviewDemo
             this.RealPlayWnd.BackColor = System.Drawing.SystemColors.WindowText;
             this.RealPlayWnd.Location = new System.Drawing.Point(18, 104);
             this.RealPlayWnd.Name = "RealPlayWnd";
-            this.RealPlayWnd.Size = new System.Drawing.Size(495, 405);
+            this.RealPlayWnd.Size = new System.Drawing.Size(528, 432);
             this.RealPlayWnd.TabIndex = 4;
             this.RealPlayWnd.TabStop = false;
             // 
@@ -587,10 +591,26 @@ namespace PreviewDemo
             // 
             this.timerPedestrianDetection.Tick += new System.EventHandler(this.timerPedestrianDetection_Tick);
             // 
+            // btnDestributeDetection
+            // 
+            this.btnDestributeDetection.Location = new System.Drawing.Point(543, 565);
+            this.btnDestributeDetection.Name = "btnDestributeDetection";
+            this.btnDestributeDetection.Size = new System.Drawing.Size(75, 23);
+            this.btnDestributeDetection.TabIndex = 39;
+            this.btnDestributeDetection.Text = "打开检测";
+            this.btnDestributeDetection.UseVisualStyleBackColor = true;
+            this.btnDestributeDetection.Click += new System.EventHandler(this.btnDestributeDetection_Click);
+            // 
+            // timerDistributeDetection
+            // 
+            this.timerDistributeDetection.Interval = 300;
+            this.timerDistributeDetection.Tick += new System.EventHandler(this.timerDistributeDetection_Tick);
+            // 
             // Preview
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(6, 14);
             this.ClientSize = new System.Drawing.Size(882, 600);
+            this.Controls.Add(this.btnDestributeDetection);
             this.Controls.Add(this.btnPedestrianDetection);
             this.Controls.Add(this.btnCapture);
             this.Controls.Add(this.btnDraw);
@@ -1177,6 +1197,10 @@ namespace PreviewDemo
 
         private void btnDraw_Click(object sender, EventArgs e)
         {
+            lpJpegPara.wPicQuality = 0; //图像质量 Image quality
+            lpJpegPara.wPicSize = 0; //抓图分辨率 设备支持0 352*288；支持1 176*144；支持2 704*576
+            hog.SetSVMDetector(HOGDescriptor.GetDefaultPeopleDetector());
+
             fDrawFun = new CHCNetSDK.DRAWFUN(DrawFunCallBack);
 
             if (! CHCNetSDK.NET_DVR_RigisterDrawFun(m_lRealHandle,fDrawFun,1))
@@ -1192,16 +1216,41 @@ namespace PreviewDemo
 	    private static int count = 0;
         private void DrawFunCallBack(int lRealHandle, IntPtr hDc, uint dwUser)
         {
-            
-            Graphics g = Graphics.FromHdc(hDc);
-            Pen m_pen = new Pen(Color.Red, 2);
-            //设置虚线格式 
-            //m_pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-            
 
+            if (!CHCNetSDK.NET_DVR_CaptureJPEGPicture_NEW(m_lUserID, lChannel, ref lpJpegPara, buffer, 102400, ref lpSizeReturned))
+            {
+              //  iLastErr = CHCNetSDK.NET_DVR_GetLastError();
+              //  str = "NET_DVR_CaptureJPEGPicture failed, error code= " + iLastErr;
+             //   MessageBox.Show(str);
+                return;
+            }
+            else
+            {
+                decodeimage = CvInvoke.cvDecodeImage(buffer, LOAD_IMAGE_TYPE.CV_LOAD_IMAGE_COLOR);
 
-            g.DrawRectangle(m_pen, 0, 0, 100 * (count++),100*(count++));
-          //  g.Clear(Color.Transparent);
+                CvInvoke.cvCopy(decodeimage, image, IntPtr.Zero);
+
+                var rects = hog.DetectMultiScale(image, 0, new Size(8, 8), new Size(0, 0), 1.05, 2, false);
+
+                Graphics g = Graphics.FromHdc(hDc);
+                Pen m_pen = new Pen(Color.Red, 20);
+                
+
+                foreach (Rectangle rectangle in rects)
+                {
+                    g.DrawRectangle(m_pen,(int)(rectangle.X*1.5),(int)(rectangle.Y*1.5), (int)(rectangle.Width*1.5),(int)(rectangle.Height*1.5));
+                }
+
+                // stopwatch.Stop();
+                // TimeSpan timeSpan = stopwatch.Elapsed;
+                // MessageBox.Show(image.Width + "  " + image.Height + "抓图成功 lpSizeReturned " + lpSizeReturned + " 耗时：" + timeSpan.TotalMilliseconds);
+
+               // CvInvoke.cvShowImage("JEPG", image);
+                //CvInvoke.cvWaitKey(1);
+                // Image<Bgr , byte> jpgImage = new Image<Bgr, byte>();
+            }
+            
+            
 	    }
 
 
@@ -1258,7 +1307,7 @@ namespace PreviewDemo
         byte[] buffer = new byte[102400];
         uint lpSizeReturned = new uint();
         //JPEG抓图 Capture a JPEG picture
-        Image<Bgr, Byte> image = new Image<Bgr, byte>(176, 144);
+        Image<Bgr, Byte> image = new Image<Bgr, byte>(352, 288);
         IntPtr decodeimage = new IntPtr();
         Stopwatch stopwatch = new Stopwatch();
 
@@ -1338,6 +1387,74 @@ namespace PreviewDemo
                 // Image<Bgr , byte> jpgImage = new Image<Bgr, byte>();
             }
             return;
+        }
+
+        private void btnDestributeDetection_Click(object sender, EventArgs e)
+        {
+            if (btnDestributeDetection.Text.Equals("打开检测"))
+            {
+                timerDistributeDetection.Start();
+                btnDestributeDetection.Text = "关闭检测";
+
+                lpJpegPara.wPicQuality = 0; //图像质量 Image quality
+                lpJpegPara.wPicSize = 0; //抓图分辨率 设备支持0 352*288；支持1 176*144；支持2 704*576
+                hog.SetSVMDetector(HOGDescriptor.GetDefaultPeopleDetector());
+
+                fDrawFun = new CHCNetSDK.DRAWFUN(DrawFunCallBackEx);
+
+                if (!CHCNetSDK.NET_DVR_RigisterDrawFun(m_lRealHandle, fDrawFun, 1))
+                {
+                    iLastErr = CHCNetSDK.NET_DVR_GetLastError();
+                    str = "叠加字符失败, error code= " + iLastErr;
+                    MessageBox.Show(str);
+                    return;
+                }
+            }
+            else if (btnDestributeDetection.Text.Equals("关闭检测"))
+            {
+                timerPedestrianDetection.Stop();
+                btnDestributeDetection.Text = "打开检测";
+            }
+        }
+
+
+	    private Rectangle[] rects = new Rectangle[1];
+        private Stopwatch _stopwatch = new Stopwatch();
+	    private TimeSpan _timeSpan = new TimeSpan();
+        private void timerDistributeDetection_Tick(object sender, EventArgs e)
+        {
+            Stopwatch _stopwatch = new Stopwatch();
+            _stopwatch.Start();
+            if (!CHCNetSDK.NET_DVR_CaptureJPEGPicture_NEW(m_lUserID, lChannel, ref lpJpegPara, buffer, 102400, ref lpSizeReturned))
+            {
+                return;
+            }
+            else
+            {
+                decodeimage = CvInvoke.cvDecodeImage(buffer, LOAD_IMAGE_TYPE.CV_LOAD_IMAGE_COLOR);
+
+                CvInvoke.cvCopy(decodeimage, image, IntPtr.Zero);
+
+                rects = hog.DetectMultiScale(image, 0, new Size(8, 8), new Size(0, 0), 1.05, 2, false);           
+            }
+            _stopwatch.Stop();
+            _timeSpan = _stopwatch.Elapsed;
+
+        }
+
+
+
+        private void DrawFunCallBackEx(int lRealHandle, IntPtr hDc, uint dwUser)
+        {
+            Graphics g = Graphics.FromHdc(hDc);
+            Pen m_pen = new Pen(Color.Red, 5);
+            PointF pointF = new PointF(100,100);
+            Font font = new Font(this.Font , FontStyle.Bold);
+            foreach (Rectangle rectangle in rects)
+            {
+                g.DrawRectangle(m_pen, (int)(rectangle.X * 1.5), (int)(rectangle.Y * 1.5), (int)(rectangle.Width * 1.5), (int)(rectangle.Height * 1.5));
+            }
+            g.DrawString(_timeSpan.TotalMilliseconds.ToString(), font,Brushes.Blue, pointF);
         }
 
 
